@@ -24,6 +24,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String KEY_INDEX = "index";
     private static final String KEY_SHOWN = "shown";
     private static final int REQUEST_CODE_CHEAT = 0;
+    private static final String KEY_CHEATED_QUESTIONS = "cheated_questions";
 
     private Question[] mQuestionBank = new Question[] {
             new Question(R.string.question_australia, true),
@@ -36,6 +37,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
+    private boolean[] mCheatedOnQuestions = new boolean[mQuestionBank.length];
 
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
@@ -47,7 +49,8 @@ public class QuizActivity extends AppCompatActivity {
 
         int messageResId = 0;
 
-        if (mIsCheater) {
+        //if (mIsCheater) {
+        if (mCheatedOnQuestions[mCurrentIndex]) {
             messageResId = R.string.judgment_toast;
         } else {
             if (userPressedTrue == answerIsTrue) {
@@ -126,6 +129,7 @@ public class QuizActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
             mIsCheater = savedInstanceState.getBoolean(KEY_SHOWN);
+            mCheatedOnQuestions = savedInstanceState.getBooleanArray(KEY_CHEATED_QUESTIONS);
             //Log.d(TAG, ""+ mIsCheater);
         }
 
@@ -144,6 +148,7 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            mCheatedOnQuestions[mCurrentIndex] = true;
         }
         //Log.i(TAG, ""+ mIsCheater);
 
@@ -155,6 +160,7 @@ public class QuizActivity extends AppCompatActivity {
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
         savedInstanceState.putBoolean(KEY_SHOWN, mIsCheater);
+        savedInstanceState.putBooleanArray(KEY_CHEATED_QUESTIONS, mCheatedOnQuestions);
         //Log.i(TAG, ""+ mIsCheater);
     }
 
