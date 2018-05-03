@@ -18,10 +18,12 @@ public class CheatActivity extends AppCompatActivity {
 
     private static final String KEY_ANSWER = "answer";
     private static final String TAG = "CheatActivity";
+    private static final String EXTRA_CHEAT_CLICKED = "clicked";
 
     private boolean mAnswerIsTrue;
     private TextView mAnswerTextView;
     private Button mShowAnswerButton;
+    private boolean mIsClicked;
 
     public static Intent newIntent(Context packageContext, boolean answerIsTrue) {
         Intent intent = new Intent(packageContext, CheatActivity.class);
@@ -46,19 +48,21 @@ public class CheatActivity extends AppCompatActivity {
         mShowAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mIsClicked = true;
                 if (mAnswerIsTrue) {
                     mAnswerTextView.setText(R.string.true_button);
                 } else {
                     mAnswerTextView.setText(R.string.false_button);
                 }
-                setAnswerShownResult(true);
+                setAnswerShownResult(mIsClicked);
             }
         });
 
         if (savedInstanceState != null) {
             //mAnswerTextView.setText(savedInstanceState.getString(KEY_ANSWER, mAnswerTextView.getText().toString())); don't have to have default
             mAnswerTextView.setText(savedInstanceState.getString(KEY_ANSWER));
-
+            mIsClicked = savedInstanceState.getBoolean(EXTRA_CHEAT_CLICKED);
+            setAnswerShownResult(savedInstanceState.getBoolean(EXTRA_CHEAT_CLICKED));
         }
     }
 
@@ -74,5 +78,6 @@ public class CheatActivity extends AppCompatActivity {
         Log.i(TAG, "onSaveInstanceState");
         //Log.i(TAG, mAnswerTextView.getText().toString()); For debugging purposes
         savedInstanceState.putString(KEY_ANSWER, mAnswerTextView.getText().toString());
+        savedInstanceState.putBoolean(EXTRA_CHEAT_CLICKED, mIsClicked);
     }
 }

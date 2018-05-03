@@ -148,6 +148,7 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            Log.d("testtttttt", ""+ mIsCheater);
             mCheatedOnQuestions[mCurrentIndex] = true;
         }
         //Log.i(TAG, ""+ mIsCheater);
